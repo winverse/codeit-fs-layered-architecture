@@ -10,11 +10,7 @@ export class AuthService {
   #passwordProvider;
   #tokenProvider;
 
-  constructor({
-    userRepository,
-    passwordProvider,
-    tokenProvider,
-  }) {
+  constructor({ userRepository, passwordProvider, tokenProvider }) {
     this.#userRepository = userRepository;
     this.#passwordProvider = passwordProvider;
     this.#tokenProvider = tokenProvider;
@@ -40,7 +36,9 @@ export class AuthService {
   }
 
   async login({ email, password }) {
-    const authUser = await this.#userRepository.findAuthByEmail(email);
+    const authUser = await this.#userRepository.findByEmail(email, {
+      includePassword: true,
+    });
 
     if (!authUser) {
       throw new UnauthorizedException(ERROR_MESSAGE.INVALID_CREDENTIALS);

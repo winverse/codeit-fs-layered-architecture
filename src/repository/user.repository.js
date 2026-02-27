@@ -30,7 +30,7 @@ export class UserRepository {
     });
   }
 
-  findByEmail(email) {
+  findByEmail(email, { includePassword = false } = {}) {
     return this.#prisma.user.findUnique({
       where: {
         email,
@@ -39,21 +39,7 @@ export class UserRepository {
         id: true,
         email: true,
         name: true,
-        createdAt: true,
-      },
-    });
-  }
-
-  findAuthByEmail(email) {
-    return this.#prisma.user.findUnique({
-      where: {
-        email,
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        password: true,
+        ...(includePassword ? { password: true } : {}),
         createdAt: true,
       },
     });
